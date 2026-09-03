@@ -38,4 +38,30 @@ class Kasir extends BaseModel
     {
         return $this->delete($id);
     }
+
+    public function findByUsername($username)
+    {
+        $statement = $this->database->prepare(
+            'SELECT * FROM kasir WHERE username = :username LIMIT 1'
+        );
+        $statement->execute(['username' => trim($username)]);
+
+        $record = $statement->fetch();
+        return $record === false ? null : $record;
+    }
+
+    public function verifyLogin($username, $password)
+    {
+        $user = $this->findByUsername($username);
+        if (!$user) {
+            return null;
+        }
+
+        $storedHash = (string) ($user['password'] ?? '');
+        if (!password_verify($password, $storedHash)) {
+            return null;
+        }
+
+        return $user;
+    }
 }

@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 define('SITOKO_ROOT', dirname(__DIR__));
 require SITOKO_ROOT . '/app/Core/Database.php';
 require SITOKO_ROOT . '/app/Core/BaseModel.php';
@@ -15,12 +17,53 @@ foreach (glob(SITOKO_ROOT . '/app/Controllers/*.php') as $file) {
 
 $router = new Router();
 $router->get('/', function () {
-	$products = (new Produk())->getAll();
-	$transactions = (new Transaksi())->getTransaksi();
-	require SITOKO_ROOT . '/app/Views/dashboard.php';
+	if (!empty($_SESSION['kasir_id'])) {
+		$products = (new Produk())->getAll();
+		$transactions = (new Transaksi())->getTransaksi();
+		require SITOKO_ROOT . '/app/Views/dashboard.php';
+		return;
+	}
+
+	header('Location: /kelompok-5/app/Views/login.php');
+	exit;
 });
 
-$router->get('/login', function () { require SITOKO_ROOT . '/app/Views/login.php'; });
+$router->get('/login', function () {
+	if (!empty($_SESSION['kasir_id'])) {
+		header('Location: /kelompok-5/app/Views/dashboard.php');
+		exit;
+	}
+
+	require SITOKO_ROOT . '/app/Views/login.php';
+});
+
+$router->get('/logout', function () {
+	$_SESSION = [];
+	if (ini_get('session.use_cookies')) {
+		$params = session_get_cookie_params();
+		setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+	}
+	session_destroy();
+	header('Location: /kelompok-5/app/Views/login.php');
+	exit;
+});
+
+$router->post('/login', function () {
+	$username = trim((string) ($_POST['username'] ?? ''));
+	$password = (string) ($_POST['password'] ?? '');
+	$user = (new Kasir())->verifyLogin($username, $password);
+
+	if ($user) {
+		$_SESSION['kasir_id'] = (int) $user['id_kasir'];
+		$_SESSION['kasir_username'] = $user['username'];
+		$_SESSION['kasir_nama'] = $user['nama_kasir'];
+		header('Location: /kelompok-5/app/Views/dashboard.php');
+		exit;
+	}
+
+	header('Location: /kelompok-5/app/Views/login.php?error=1');
+	exit;
+});
 
 $router->get('/produk', function () { $products = (new ProdukController(new Produk()))->index(); require SITOKO_ROOT . '/app/Views/produk.php'; });
 $router->get('/kategori', function () { $categories = (new KategoriController(new Kategori()))->index(); require SITOKO_ROOT . '/app/Views/kategori.php'; });
@@ -58,6 +101,11 @@ try {
 	if ($basePath !== '' && $basePath !== '/' && strpos($requestUri, $basePath) === 0) {
 		$requestUri = substr($requestUri, strlen($basePath)) ?: '/';
 	}
+
+	if ($requestUri === '/kelompok-5' || $requestUri === '/kelompok-5/') {
+		$requestUri = '/';
+	}
+
 	$router->dispatch($_SERVER['REQUEST_METHOD'] ?? 'GET', $requestUri);
 } catch (Throwable $exception) {
 	http_response_code(400);

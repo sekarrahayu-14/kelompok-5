@@ -5,6 +5,6 @@ return [
 	'port' => '3306',
 	'database' => 'db_sitoko',
 	'username' => 'root',
-	'password' => '',
+	'password' => 'rpl12345',
 	'charset' => 'utf8mb4',
 ];

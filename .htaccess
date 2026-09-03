@@ -1,5 +1,17 @@
+Options -Indexes
+DirectoryIndex index.php
+
 RewriteEngine On
 RewriteBase /kelompok-5/
+
+# Root project harus diarahkan ke index.php agar tidak tampil directory listing
+RewriteRule ^$ index.php [L]
+
+# Arahkan URL yang jelas ke router PHP
+RewriteRule ^login$ public/index.php [QSA,L]
+RewriteRule ^logout$ public/index.php [QSA,L]
+
+# Untuk semua request selain file/folder yang ada, arahkan ke router aplikasi
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ public/index.php [QSA,L]
