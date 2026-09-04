@@ -22,7 +22,7 @@ abstract class BaseModel
     public function find($id)
     {
         $statement = $this->database->prepare(
-            "SELECT * FROM {$this->table} WHERE {$this->primaryKey} = :id LIMIT 1"
+            "SELECT * FROM {$this->table} WHERE {$this->primaryKey} = :id"
         );
         $statement->execute(['id' => $id]);
         $record = $statement->fetch();

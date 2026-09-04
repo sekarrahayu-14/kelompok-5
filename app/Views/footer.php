@@ -1,1 +1,1 @@
-</div></main><script src="/kelompok-5/public/assets/js/script.js"></script></body></html>
+</div></main><script src="/kelompok-5/public/assets/js/script.js"></script><script src="/kelompok-5/public/assets/js/route-fallback.js"></script></body></html>

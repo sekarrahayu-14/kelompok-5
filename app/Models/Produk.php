@@ -18,7 +18,7 @@ class Produk extends BaseModel
     public function createProduk($kategoriId, $nama, $harga, $stok)
     {
         return $this->create([
-            'id_kategori' => $kategoriId,
+            'kategori_id' => $kategoriId,
             'nama_produk' => $nama,
             'harga' => $harga,
             'stok' => $stok,
@@ -28,7 +28,7 @@ class Produk extends BaseModel
     public function updateProduk($id, $kategoriId, $nama, $harga, $stok)
     {
         return $this->update($id, [
-            'id_kategori' => $kategoriId,
+            'kategori_id' => $kategoriId,
             'nama_produk' => $nama,
             'harga' => $harga,
             'stok' => $stok,

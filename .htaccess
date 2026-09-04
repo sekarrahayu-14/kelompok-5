@@ -10,6 +10,13 @@ RewriteRule ^$ index.php [L]
 # Arahkan URL yang jelas ke router PHP
 RewriteRule ^login$ public/index.php [QSA,L]
 RewriteRule ^logout$ public/index.php [QSA,L]
+RewriteRule ^produk(?:/delete|/update)?$ public/index.php [QSA,L]
+RewriteRule ^kategori(?:/delete|/update)?$ public/index.php [QSA,L]
+RewriteRule ^pelanggan(?:/delete|/update)?$ public/index.php [QSA,L]
+RewriteRule ^kasir(?:/delete|/update)?$ public/index.php [QSA,L]
+RewriteRule ^transaksi$ public/index.php [QSA,L]
+RewriteRule ^laporan$ public/index.php [QSA,L]
+RewriteRule ^struk$ public/index.php [QSA,L]
 
 # Untuk semua request selain file/folder yang ada, arahkan ke router aplikasi
 RewriteCond %{REQUEST_FILENAME} !-f
